@@ -1,0 +1,9 @@
+note over browser:
+user presses "save" form button, 
+which immediately updates the DOM
+and sends a HTTP POST request
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server-->browser: HTTP Status 201
+
