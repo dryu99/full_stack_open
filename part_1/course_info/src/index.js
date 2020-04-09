@@ -9,35 +9,58 @@ const App = () => {
   const exercises2 = 7
   const part3 = 'State of a component'
   const exercises3 = 14
+  const partData = [
+    {
+      part: part1,
+      exercises: exercises1
+    },
+    {
+      part: part2,
+      exercises: exercises2
+    },
+    {
+      part: part3,
+      exercises: exercises3
+    }
+  ]
 
   return (
-    <div>
+    <React.Fragment>
       <Header course={course} />
-      <Content partName={part1} exerciseCount={exercises1}/>
-      <Content partName={part2} exerciseCount={exercises2}/>
-      <Content partName={part3} exerciseCount={exercises3}/>
+      <Content partData={partData}/>
       <Total exerciseCounts={[exercises1, exercises2, exercises3]}/>
-    </div>
+    </React.Fragment>
   )
 }
 
 const Header = (props) => {
   return (
-    <div>
+    <React.Fragment>
       <h1>{props.course}</h1>
-    </div>
+    </React.Fragment>
   )
 };
 
 const Content = (props) => {
+  let partData = props.partData;
   return (
-    <div>
-      <p>
-        {props.partName} {props.exerciseCount}
-      </p>
-    </div>
+    <React.Fragment>
+        <Part partName={partData[0].part} exerciseCount={partData[0].exercises}/>
+        <Part partName={partData[1].part} exerciseCount={partData[1].exercises}/>
+        <Part partName={partData[2].part} exerciseCount={partData[2].exercises}/>
+    </React.Fragment>
   )
 };
+
+const Part = (props) => {
+  return (
+    <React.Fragment>
+      <p>
+        {props.partName} {props.exerciseCount}        
+      </p>
+    </React.Fragment>
+  )
+}
 
 const Total = (props) => {
   let exerciseCounts = props.exerciseCounts;
@@ -46,9 +69,9 @@ const Total = (props) => {
   }, 0);
 
   return (
-    <div>
+    <React.Fragment>
       <p>Number of exercises {totalExerciseCount}</p>
-    </div>
+    </React.Fragment>
   )
 };
 
