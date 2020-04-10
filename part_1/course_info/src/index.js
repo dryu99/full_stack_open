@@ -2,33 +2,29 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
-  const partData = [
-    {
-      part: part1,
-      exercises: exercises1
-    },
-    {
-      part: part2,
-      exercises: exercises2
-    },
-    {
-      part: part3,
-      exercises: exercises3
-    }
-  ]
-
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  };
+  
   return (
     <React.Fragment>
-      <Header course={course} />
-      <Content partData={partData}/>
-      <Total exerciseCounts={[exercises1, exercises2, exercises3]}/>
+      <Header course={course.name} />
+      <Content parts={course.parts}/>
+      <Total parts={course.parts}/>
     </React.Fragment>
   )
 }
@@ -42,35 +38,36 @@ const Header = (props) => {
 };
 
 const Content = (props) => {
-  let partData = props.partData;
+  let parts = props.parts;
   return (
     <React.Fragment>
-        <Part partName={partData[0].part} exerciseCount={partData[0].exercises}/>
-        <Part partName={partData[1].part} exerciseCount={partData[1].exercises}/>
-        <Part partName={partData[2].part} exerciseCount={partData[2].exercises}/>
+        <Part part={parts[0]}/>
+        <Part part={parts[1]}/>
+        <Part part={parts[2]}/>
     </React.Fragment>
   )
 };
 
 const Part = (props) => {
+  let part = props.part;
   return (
     <React.Fragment>
       <p>
-        {props.partName} {props.exerciseCount}        
+        {part.name} {part.exercises}        
       </p>
     </React.Fragment>
   )
 }
 
 const Total = (props) => {
-  let exerciseCounts = props.exerciseCounts;
-  let totalExerciseCount = exerciseCounts.reduce((acc, currentValue) => {
-    return acc + currentValue;
+  let parts = props.parts;
+  let totalExercises = parts.reduce((acc, part) => {
+    return acc + part.exercises;
   }, 0);
 
   return (
     <React.Fragment>
-      <p>Number of exercises {totalExerciseCount}</p>
+      <p>Number of exercises {totalExercises}</p>
     </React.Fragment>
   )
 };
