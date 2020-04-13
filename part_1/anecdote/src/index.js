@@ -1,33 +1,48 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const App = (props) => {
+const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
-  const [points, setPoints] = useState(new Array(props.anecdotes.length).fill(0));
-  console.log(selected, points)
+  const [highestSelected, setHighestSelected] = useState(0);
+  const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
   
   const handleRandomClick = () => {
     const randomDigit = Math.floor(Math.random() * 10);
-    setSelected(randomDigit % props.anecdotes.length);
+    setSelected(randomDigit % anecdotes.length);
   }
 
   const handleVoteClick = () => {
     const newPoints = [...points];
     newPoints[selected]++;
     setPoints(newPoints);
+
+    if (newPoints[selected] > newPoints[highestSelected]) {
+      setHighestSelected(selected);
+    }
   }
 
   return (
     <React.Fragment>
-      <p>{props.anecdotes[selected]}</p>
-      <p>has {points[selected]} votes</p>
+      <h1>Anecdote of the day</h1>
+      <Anecdote anecdote={anecdotes[selected]} anecdotePoints={points[selected]}/>
       <button onClick={handleVoteClick}>
         vote
       </button>
       <button onClick={handleRandomClick}>
         next anecdote
-      </button>      
+      </button>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote anecdote={anecdotes[highestSelected]} anecdotePoints={points[highestSelected]}/>
     </React.Fragment>
+  )
+}
+
+const Anecdote = ({ anecdote, anecdotePoints }) => {
+  return (
+    <div>
+      <p>{anecdote}</p>
+      <p>has {anecdotePoints} votes</p>
+    </div>
   )
 }
 
