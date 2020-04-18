@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const Country = ({ country, includeDetails }) => {
+const Country = ({ country, includeDetails, showCountryDetails }) => {
   let componentContent;
-  if (includeDetails) {
+  if (includeDetails) { // render detailed country
     componentContent = (
       <div>
         <h1>{country.name}</h1> 
@@ -17,9 +17,12 @@ const Country = ({ country, includeDetails }) => {
         <img src={country.flag} alt={country.name + " flag"} height="100"></img>
       </div>
     );
-  } else {
+  } else { // render simple country
     componentContent = (
-      <div>{country.name}</div>  
+      <div>
+        {country.name}
+        <button onClick={() => showCountryDetails(country)}>show</button>
+      </div>
     );
   }
 

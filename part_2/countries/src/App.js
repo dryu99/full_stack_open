@@ -7,7 +7,7 @@ import Countries from './components/Countries'
 function App() {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState(countries);
-  const [filterCountry, setFilterCountry] = useState('Korea (De');
+  const [filterCountry, setFilterCountry] = useState('Ko');
 
   const hook = () => {
     console.log("fetching countries data...");
@@ -29,11 +29,11 @@ function App() {
     filterCountries(countries, newFilterCountry);
   }
 
-  const filterCountries = (countries, filterText) => {
+  const filterCountries = (countries, filterText) => {    
     const newFilteredCountries = countries.filter(country => 
       country.name.toLowerCase().includes(filterText.toLowerCase())
-    );
-
+      );
+      
     setFilteredCountries(newFilteredCountries);
   }
 
@@ -44,7 +44,11 @@ function App() {
         filterText={filterCountry} 
         handleFilterTextChange={handleFilterCountryChange}
       />
-      <Countries countries={filteredCountries}/>
+      <Countries 
+        countries={filteredCountries} 
+        setFilterCountry={setFilterCountry}
+        setFilteredCountries={setFilteredCountries}        
+      />
     </React.Fragment>    
   );
 }
