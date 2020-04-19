@@ -6,32 +6,24 @@ import axios from 'axios';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [filteredPersons, setFilteredPersons] = useState(persons);
-  const [ newName, setNewName ] = useState('');
-  const [ newNumber, setNewNumber ] = useState('');
-  const [ filterName, setFilterName ] = useState('');
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
+  const [filterName, setFilterName] = useState('');
 
-  const hook = () => {
-    console.log('hooking');
+  useEffect(() => {
+    console.log('fetching data...');
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
         console.log('promsie fulfilled!')
         setPersons(response.data);
-        setFilteredPersons(response.data);
       });
-  }
+  }, []);
 
-  useEffect(hook, []);
   console.log('persons length: ', persons.length);
 
   const handleFilterNameChange = (event) => {
     const newFilterName = event.target.value;
-    const newFilteredPersons = persons.filter(person => 
-      person.name.toLowerCase().includes(newFilterName.toLowerCase())
-    );
-
-    setFilteredPersons(newFilteredPersons);
     setFilterName(newFilterName);
   }
 
@@ -57,14 +49,22 @@ const App = () => {
         number: newNumber
       }
 
-      setPersons(persons.concat(newPerson));
-      if (newPerson.name.includes(filterName)) {
-        setFilteredPersons(filteredPersons.concat(newPerson));
-      }
-      setNewName('');
-      setNewNumber('');
+      console.log('creating data...');
+      axios
+        .post('http://localhost:3001/persons', newPerson)
+        .then(response => {
+          console.log('promise fulfilled!');
+          setPersons(persons.concat(response.data));
+          setNewName('');
+          setNewNumber('');
+        });
     }
   }
+
+  // on every render, filter persons list based on filter text
+  const personsToShow = persons.filter(person => 
+    person.name.toLowerCase().includes(filterName.toLowerCase())
+  );
 
   return (
     <div>
@@ -84,7 +84,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons}/>
+      <Persons persons={personsToShow}/>
     </div>
   )
 }
