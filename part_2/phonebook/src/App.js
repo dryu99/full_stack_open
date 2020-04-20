@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Notification from './components/Notification';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personService
@@ -53,6 +55,7 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
+          displayNotificationMessage(`Added ${returnedPerson.name}`);
         });      
     }
   }
@@ -63,21 +66,32 @@ const App = () => {
       .update(changedPerson.id, changedPerson)
       .then(returnedPerson => {
         setPersons(persons.map(p => 
-          p.id === returnedPerson.id ? returnedPerson : p)              
-        );
+          p.id === returnedPerson.id ? returnedPerson : p              
+        ));
         setNewName('');
         setNewNumber('');
+        setNotificationMessage(`Updated ${person.name}`);
       });  
   }
 
   const deletePerson = (deletedPerson) => {
     if (window.confirm(`Delete ${deletePerson.name}?`)) {
       personService
-      .remove(deletedPerson.id)
-      .then(response => {
-        setPersons(persons.filter(person => person.id !== deletedPerson.id));
-      });
+        .remove(deletedPerson.id)
+        .then(response => {
+          setPersons(persons.filter(person => 
+            person.id !== deletedPerson.id
+          ));
+          displayNotificationMessage(`Deleted ${deletedPerson.name}`)
+        });
     }    
+  }
+
+  const displayNotificationMessage = (message) => {
+    setNotificationMessage(message);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 5000);
   }
 
   // on every render, filter persons list based on filter text
@@ -87,7 +101,8 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>      
+      <h2>Phonebook</h2>   
+      <Notification message={notificationMessage}/> 
       <Filter 
         filterName={filterName} 
         handleFilterNameChange={handleFilterNameChange}
