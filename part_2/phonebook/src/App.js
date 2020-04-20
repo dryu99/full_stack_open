@@ -71,7 +71,13 @@ const App = () => {
         setNewName('');
         setNewNumber('');
         setNotificationMessage(`Updated ${person.name}`);
-      });  
+      })
+      .catch(error => {
+        setPersons(persons.filter(p => 
+          p.id !== changedPerson.id
+        ));
+        displayNotificationMessage(`Information of ${changedPerson.name} has already been removed from server`, 'red');
+      });
   }
 
   const deletePerson = (deletedPerson) => {
@@ -83,12 +89,12 @@ const App = () => {
             person.id !== deletedPerson.id
           ));
           displayNotificationMessage(`Deleted ${deletedPerson.name}`)
-        });
+      });
     }    
   }
 
-  const displayNotificationMessage = (message) => {
-    setNotificationMessage(message);
+  const displayNotificationMessage = (text, color) => {
+    setNotificationMessage({text, color});
     setTimeout(() => {
       setNotificationMessage(null);
     }, 5000);
