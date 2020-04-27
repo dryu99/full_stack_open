@@ -81,7 +81,7 @@ const App = () => {
   }
 
   const deletePerson = (deletedPerson) => {
-    if (window.confirm(`Delete ${deletePerson.name}?`)) {
+    if (window.confirm(`Delete ${deletedPerson.name}?`)) {
       personService
         .remove(deletedPerson.id)
         .then(response => {
