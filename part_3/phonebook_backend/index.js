@@ -1,6 +1,8 @@
+require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
+const Person = require('./models/person');
 
 morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
 
@@ -32,7 +34,9 @@ let persons = [
 ];
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  Person.find({}).then(foundPersons => {
+    res.json(foundPersons.map(person => person.toJSON()));
+  });
 });
 
 app.get('/api/persons/:id', (req, res) => {
@@ -53,29 +57,15 @@ app.delete('/api/persons/:id', (req, res) => {
 });
 
 app.post('/api/persons', (req, res) => {
-  const body = req.body;
+  const body = req.body;  
+  const newPerson = new Person({
+    name: body.name,
+    number: body.number,
+  });
 
-  // error handling
-  if (!body.name || !body.number) {
-    return res.status(400).json({
-      error: 'name or number missing'
-    });
-  } else {
-    const person = persons.find(person => person.name === body.name);
-    if (person) {
-      return res.status(400).json({
-        error: 'person already exists'
-      });
-    }
-  }
-
-  const newPerson = {
-    ...body,
-    id: generateId()
-  }
-
-  persons = persons.concat(newPerson);
-  res.json(newPerson);
+  newPerson.save().then(savedPerson => {
+    res.json(savedPerson.toJSON());
+  })
 });
 
 const generateId = () => {
