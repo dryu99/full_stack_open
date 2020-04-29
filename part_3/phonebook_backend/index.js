@@ -4,56 +4,37 @@ const express = require('express');
 const app = express();
 const Person = require('./models/person');
 
+// set up pre-processing middleware
 morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
-
 app.use(express.json());
 app.use(express.static('build'));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'));
 
-let persons = [
-    {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    }
-];
-
+// set up routes
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(foundPersons => {
     res.json(foundPersons.map(person => person.toJSON()));
   });
 });
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find(person => person.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(foundPerson => {
+      if (foundPerson) {
+        res.json(foundPerson.toJSON());
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch(error => next(error))
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter(person => person.id !== id);
-  res.status(204).end();
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end();
+    })
+    .catch(error => next(error));
 });
 
 app.post('/api/persons', (req, res) => {
@@ -68,20 +49,40 @@ app.post('/api/persons', (req, res) => {
   })
 });
 
-const generateId = () => {
-  console.log();
-  const maxId = persons.reduce((acc, currentPerson) => Math.max(acc, currentPerson.id), 0);
-  const offset = Math.ceil(Math.random() * 10) // random num between 1 - 10
-  return maxId + offset;
-}
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body;
+  const person = {
+    number: body.number
+  };
 
-app.get('/info', (req, res) => {
-  const infoHtml = `<p>Phonebook has info for ${persons.length} people</p>`
-    + `<p>${new Date()}</p>`
-  res.send(infoHtml);
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson.toJSON());
+    })
+    .catch(error => next(error));
 });
 
-const PORT = process.env.PORT || 3001;
+app.get('/info', (req, res) => {
+  Person.find({}).then(foundPersons => {
+    const infoHtml = `<p>Phonebook has info for ${foundPersons.length} people</p>`
+    + `<p>${new Date()}</p>`
+    res.send(infoHtml);  
+  });
+});
+
+// set up post-processing middleware
+const errorHandler = (error, req, res, next) => {
+  console.log(error);
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  } 
+  next(error)
+}
+
+app.use(errorHandler);
+
+// initialize server
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`running server on port ${PORT}...`);
 });
