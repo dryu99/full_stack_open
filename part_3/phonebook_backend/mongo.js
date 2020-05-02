@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 if (process.argv.length === 3 || process.argv.length === 5) {
   // connect to database
-  const password = process.argv[2]
+  const password = process.argv[2];
   const url =
-    `mongodb+srv://fullstack:${password}@cluster0-yz5za.mongodb.net/phonebook-app?retryWrites=true&w=majority`
+    `mongodb+srv://fullstack:${password}@cluster0-yz5za.mongodb.net/phonebook-app?retryWrites=true&w=majority`;
 
   mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -14,7 +14,7 @@ if (process.argv.length === 3 || process.argv.length === 5) {
     number: Number
   });
 
-  const Person = mongoose.model("Person", personSchema);
+  const Person = mongoose.model('Person', personSchema);
 
   // execute requested database query
   if (process.argv.length === 3) {
@@ -34,7 +34,7 @@ if (process.argv.length === 3 || process.argv.length === 5) {
     const number = process.argv[4];
     const newPerson = new Person({
       name: name,
-      number: number 
+      number: number
     });
 
     newPerson.save().then(result => {
@@ -44,5 +44,5 @@ if (process.argv.length === 3 || process.argv.length === 5) {
   }
 } else {
   console.log('invalid number of arguments were given, please give 3 or 5');
-  process.exit(1)
+  process.exit(1);
 }

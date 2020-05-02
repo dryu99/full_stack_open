@@ -5,7 +5,7 @@ const app = express();
 const Person = require('./models/person');
 
 // set up pre-processing middleware
-morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('data', function (req, res) { return JSON.stringify(req.body); });
 app.use(express.json());
 app.use(express.static('build'));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'));
@@ -26,7 +26,7 @@ app.get('/api/persons/:id', (req, res, next) => {
         res.status(404).end();
       }
     })
-    .catch(error => next(error))
+    .catch(error => next(error));
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -38,7 +38,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 });
 
 app.post('/api/persons', (req, res, next) => {
-  const body = req.body;  
+  const body = req.body;
   const newPerson = new Person({
     name: body.name,
     number: body.number,
@@ -47,7 +47,7 @@ app.post('/api/persons', (req, res, next) => {
   newPerson.save()
     .then(savedPerson => savedPerson.toJSON())
     .then(savedAndFormattedPerson => {
-      res.json(savedAndFormattedPerson);  
+      res.json(savedAndFormattedPerson);
     })
     .catch(error => next(error));
 });
@@ -68,8 +68,8 @@ app.put('/api/persons/:id', (req, res, next) => {
 app.get('/info', (req, res) => {
   Person.find({}).then(foundPersons => {
     const infoHtml = `<p>Phonebook has info for ${foundPersons.length} people</p>`
-    + `<p>${new Date()}</p>`
-    res.send(infoHtml);  
+    + `<p>${new Date()}</p>`;
+    res.send(infoHtml);
   });
 });
 
@@ -77,12 +77,12 @@ app.get('/info', (req, res) => {
 const errorHandler = (error, req, res, next) => {
   console.log(error);
   if (error.name === 'CastError') {
-    return res.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === "ValidationError") {
-    return res.status(400).send({ error: error.message })
+    return res.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).send({ error: error.message });
   }
-  next(error)
-}
+  next(error);
+};
 
 app.use(errorHandler);
 
