@@ -56,7 +56,10 @@ const App = () => {
           setNewName('');
           setNewNumber('');
           displayNotificationMessage(`Added ${returnedPerson.name}`);
-        });      
+        })
+        .catch(error => {
+          displayNotificationMessage(error.response.data.error, 'red');
+        });
     }
   }
 

@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
+
+// get rid of deprecation warnings
+mongoose.set('useCreateIndex', true);
 
 // connect to database
 const url = process.env.MONGODB_URI;
@@ -14,9 +18,19 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // set up Schema
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: Number
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+    unique: true
+  },
+  number: {
+    type: Number,
+    required: true,
+    min: 10000000
+  }
 });
+personSchema.plugin(uniqueValidator);
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
