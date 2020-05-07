@@ -1,4 +1,5 @@
 const express = require('express');
+require('express-async-errors');
 const app = express();
 const blogRouter = require('./controllers/blogs');
 const mongoose = require('mongoose');
@@ -25,5 +26,7 @@ app.use(middleware.requestLogger);
 app.use('/api/blogs', blogRouter);
 
 // set up post-middleware
+app.use(middleware.unknownEndpointHandler);
+app.use(middleware.errorHandler);
 
 module.exports = app;

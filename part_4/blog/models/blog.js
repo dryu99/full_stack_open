@@ -2,9 +2,15 @@ const mongoose = require('mongoose');
 
 // set up schema blueprint and Blog db entry point
 const blogSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true
+  },
   author: String,
-  url: String,
+  url: {
+    type: String,
+    required: true
+  },
   likes: Number
 });
 
