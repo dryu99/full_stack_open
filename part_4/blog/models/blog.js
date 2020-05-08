@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('useFindAndModify', false);
+
 // set up schema blueprint and Blog db entry point
 const blogSchema = new mongoose.Schema({
   title: {

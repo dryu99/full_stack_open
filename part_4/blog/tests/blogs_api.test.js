@@ -92,6 +92,87 @@ describe('POST', () => {
   });
 });
 
+describe('PUT', () => {
+  test('succeeds with status 200 if id is valid', async () => {
+    const blogsAtStart = await testHelper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+
+    const newBlog = {
+      title: 'dylan\'s blog',
+      author: 'dylan',
+      url: 'www.dylan.com',
+      likes: 22
+    };
+
+    const putResponse = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    newBlog.id = putResponse.body.id;
+
+    const blogsAtEnd = await testHelper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(testHelper.initialBlogs.length);
+    expect(blogsAtEnd).toContainEqual(newBlog);
+    expect(blogsAtEnd).not.toContainEqual(blogToUpdate);
+  });
+
+  test('fails with status 400 if id is invalid', async () => {
+    const invalidId = 'fjeoiafjoeia4u731984728190fiajfea';
+    const newBlog = {
+      title: 'dylan\'s blog',
+      author: 'dylan',
+      url: 'www.dylan.com',
+      likes: 22
+    };
+
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .send(newBlog)
+      .expect(400);
+  });
+
+  test('fails with status 404 if blog with valid id does not exist', async () => {
+    const validNonExistingId = await testHelper.nonExistingId();
+    const newBlog = {
+      title: 'dylan\'s blog',
+      author: 'dylan',
+      url: 'www.dylan.com',
+      likes: 22
+    };
+
+    await api
+      .put(`/api/blogs/${validNonExistingId}`)
+      .send(newBlog)
+      .expect(404);
+  });
+});
+
+describe('DELETE', () => {
+  test('succeeds with status 204 if id is valid', async () => {
+    const blogsAtStart = await testHelper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204);
+
+    const blogsAtEnd = await testHelper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(testHelper.initialBlogs.length - 1);
+    expect(blogsAtEnd).not.toContainEqual(blogToDelete);
+  });
+
+  test('fails with status 400 if id is invalid', async () => {
+    const invalidId = 'jfij032984032ujf90eajfeoiajf';
+
+    await api
+      .delete(`/api/blogs/${invalidId}`)
+      .expect(400);
+
+    const blogsAtEnd = await testHelper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(testHelper.initialBlogs.length);
+  });
+});
 
 afterAll(() => {
   mongoose.connection.close();
