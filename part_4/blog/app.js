@@ -2,6 +2,8 @@ const express = require('express');
 require('express-async-errors');
 const app = express();
 const blogRouter = require('./controllers/blogs');
+const userRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 const mongoose = require('mongoose');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
@@ -20,10 +22,13 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 // set up pre-middleware
 app.use(middleware.cors());
 app.use(middleware.json());
+app.use(middleware.tokenExtractor);
 app.use(middleware.requestLogger);
 
 // initialize routers
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
+app.use('/api/login', loginRouter);
 
 // set up post-middleware
 app.use(middleware.unknownEndpointHandler);

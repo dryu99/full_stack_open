@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 mongoose.set('useFindAndModify', false);
 
-// set up schema blueprint and Blog db entry point
+// set up schema blueprint
 const blogSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -13,7 +13,11 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  likes: Number
+  likes: Number,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 blogSchema.set('toJSON', {
@@ -24,6 +28,7 @@ blogSchema.set('toJSON', {
   }
 });
 
+// set up Blog db entry point
 const Blog = mongoose.model('Blog', blogSchema);
 
 module.exports = Blog;
