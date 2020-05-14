@@ -1,28 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const CreateBlogForm = ({newBlog, setNewBlog, addNewBlog}) => {
+const CreateBlogForm = ({addNewBlog}) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+
+  const createBlog = async (event) => {
+    event.preventDefault();
+    await addNewBlog({
+      title,
+      author,
+      url 
+    })
+
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+  }
 
   return (
-    <form onSubmit={addNewBlog}>
+    <form onSubmit={createBlog}>
       <div>
         title:
         <input 
-          value={newBlog.title}
-          onChange={({target}) => setNewBlog({...newBlog, title: target.value})}>
+          value={title}
+          onChange={({target}) => setTitle(target.value)}>
         </input>
       </div>          
       <div>
         author:
         <input 
-          value={newBlog.author}
-          onChange={({target}) => setNewBlog({...newBlog, author: target.value})}>
+          value={author}
+          onChange={({target}) => setAuthor(target.value)}>
         </input>
       </div>
       <div>
         url:
         <input 
-          value={newBlog.url}
-          onChange={({target}) => setNewBlog({...newBlog, url: target.value})}>
+          value={url}
+          onChange={({target}) => setUrl(target.value)}>
         </input>
       </div>
       <button type="submit">create</button>

@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
+  const [blogs, setBlogs] = useState([])  
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -54,14 +50,32 @@ const App = () => {
     setUser(null);
   }
 
-  const addNewBlog = async (event) => {
-    event.preventDefault();
+  const addNewBlog = async (newBlog) => {
     try {
       const createdBlog = await blogService.create(newBlog, user.token);
       setBlogs(blogs.concat(createdBlog));
     } catch (exception) {
     }
   }
+
+  const updateBlog = async (blog, id) => {
+    try {
+      const updatedBlog = await blogService.update(blog, id);
+      setBlogs(blogs.map(b => b.id === id ? updatedBlog : b));
+    } catch (exception) {
+    }
+  }
+
+  const removeBlog = async (id) => {
+    try {
+      await blogService.remove(id, user.token);
+      setBlogs(blogs.filter(b => b.id !== id));
+    } catch (exception) {
+    }
+  }
+
+  // sort blogs in descending order of likes
+  const likeSortedBlogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
 
   if (user === null) {
     return (
@@ -83,13 +97,19 @@ const App = () => {
         <p>{user.name} logged in</p>
 
         <h2>create new</h2>
-        <CreateBlogForm 
-          newBlog={newBlog}
-          setNewBlog={setNewBlog}
-          addNewBlog={addNewBlog}
-        />
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+        <Togglable buttonLabel="new blog">
+          <CreateBlogForm 
+            addNewBlog={addNewBlog}
+          />
+        </Togglable>
+        {likeSortedBlogs.map(blog =>
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            updateBlog={updateBlog}
+            removeBlog={removeBlog} 
+            user={user}
+          />
           )}
         <button onClick={handleLogout}>logout</button>
       </div>

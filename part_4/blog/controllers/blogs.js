@@ -49,6 +49,10 @@ blogRouter.delete('/:id', async (request, response) => {
     return response.status(400).json({ error: 'blog doesn\'t exist' });
   }
 
+  if (!blogToDelete.user) {
+    return response.status(401).json({ error: 'bad data' });
+  }
+
   // make sure blog's owner === request user
   if (blogToDelete.user.toString() !== decodedToken.id) {
     return response.status(401).json({ error: 'blog doesn\'t belong to user' });
