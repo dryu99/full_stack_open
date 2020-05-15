@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 const Togglable = (props) => {
   const [visible, setVisible] = useState(false);
-  const hiddenStyle = { display: 'none' }
+  const hiddenStyle = { display: 'none' };
 
   const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   return (
     <React.Fragment>
@@ -18,7 +18,7 @@ const Togglable = (props) => {
         <button onClick={toggleVisibility}>cancel</button>
       </div>
     </React.Fragment>
-  )
+  );
 };
 
 export default Togglable;
