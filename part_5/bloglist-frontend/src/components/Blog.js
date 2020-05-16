@@ -34,9 +34,11 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
-      <button onClick={toggleDetails}>{viewDetails ? 'hide' : 'view'}</button>
-      <div style={viewDetails ? null : { display: 'none' }}>
+      <div className="default-view">
+        {blog.title} {blog.author}
+        <button onClick={toggleDetails}>{viewDetails ? 'hide' : 'view'}</button>
+      </div>
+      <div className="detailed-view" style={viewDetails ? null : { display: 'none' }}>
         {blog.url}
         <br/>
         likes {blog.likes}
