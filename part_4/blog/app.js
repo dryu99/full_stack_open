@@ -30,6 +30,13 @@ app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
 
+if (process.env.NODE_ENV === 'test') {
+  console.log('enabling testing router');
+  const testingRouter = require('./controllers/testing');
+  app.use('/api/testing', testingRouter);
+}
+
+
 // set up post-middleware
 app.use(middleware.unknownEndpointHandler);
 app.use(middleware.errorHandler);

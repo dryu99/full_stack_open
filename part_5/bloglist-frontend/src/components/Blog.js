@@ -29,19 +29,21 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
 
     if(ownedByLoggedInUser && window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       await removeBlog(blog.id);
+    } else {
+      alert('You cannot delete blogs you don\'t own!');
     }
   };
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       <div className="default-view">
-        {blog.title} {blog.author}
-        <button onClick={toggleDetails}>{viewDetails ? 'hide' : 'view'}</button>
+        <span>{blog.title} {blog.author}</span>
+        <button className="toggle-button"onClick={toggleDetails}>{viewDetails ? 'hide' : 'view'}</button>
       </div>
       <div className="detailed-view" style={viewDetails ? null : { display: 'none' }}>
-        {blog.url}
+        <span>{blog.url}</span>
         <br/>
-        likes {blog.likes}
+        <span>likes <span className="likes">{blog.likes}</span></span>
         <button onClick={handleLikeClick}>like</button>
         <br/>
         <button onClick={handleRemoveClick}>remove</button>
