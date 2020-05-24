@@ -11,11 +11,8 @@ const AnecdoteList = (props) => {
   const dispatch = useDispatch()
 
   const vote = (anecdote) => {
-    dispatch(voteForAnecdote(anecdote.id));
-    dispatch(changeNoticiation(`you voted "${anecdote.content}"`));
-    setTimeout(() => {
-      dispatch(changeNoticiation(''));  
-    }, 5000)
+    dispatch(voteForAnecdote(anecdote));
+    dispatch(changeNoticiation(`you voted "${anecdote.content}"`, 5));
   }
 
   return (
