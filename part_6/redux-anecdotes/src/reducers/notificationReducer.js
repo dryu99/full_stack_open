@@ -6,14 +6,18 @@ const notificationReducer = (state='', action) => {
   return state
 }
 
+let timeoutId = null;
+
 export const changeNoticiation = (notification, secondsInterval) => {
+  if (timeoutId !== null) clearTimeout(timeoutId);
+
   return async (dispatch) => {
     dispatch({
         type: "CHANGE_NOTIFICATION",
         notification
     })
 
-    await setTimeout(() => {
+    timeoutId = await setTimeout(() => {
       dispatch({
         type: "CHANGE_NOTIFICATION",
         notification: ''
