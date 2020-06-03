@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useField } from './hooks/index';
 import {
   Link,
   Switch,
@@ -67,9 +68,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const { reset: resetContent, ...content } = useField('content', 'text')
+  const { reset: resetAuthor, ...author } = useField('author', 'text')
+  const { reset: resetInfo, ...info } = useField('info', 'text')
 
   const history = useHistory();
 
@@ -77,17 +78,20 @@ const CreateNew = (props) => {
     e.preventDefault()    
 
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
 
-    setContent('')
-    setAuthor('')
-    setInfo('')
-
     history.push('/')
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault()  
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
@@ -96,17 +100,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info} />
         </div>
         <button type="submit">create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
