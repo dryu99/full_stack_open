@@ -15,12 +15,24 @@ const useField = (type) => {
   }
 }
 
+// hook that holds state of country of given name. If given name is invalid, country state is null.
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect()
+  useEffect(() => {
+    axios
+      .get('https://restcountries.eu/rest/v2/all')
+      .then(response => {
+        const foundCountry = response.data
+          .find(c => c.name.toLowerCase() === name.toLowerCase())
+        setCountry(foundCountry ? foundCountry : null);
+      });
+  }, [name])
 
-  return country
+  return {
+    found: country ? true : false,
+    data: country
+  }
 }
 
 const Country = ({ country }) => {
