@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../reducers/userReducer';
 
-const LoginForm = ({
-  username,
-  setUsername,
-  password,
-  setPassword,
-  handleLogin
-}) => {
+const LoginForm = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    dispatch(loginUser(username, password));
+    setPassword('');
+  };
+
   return (
     <form onSubmit={handleLogin}>
       <div>
