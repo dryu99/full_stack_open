@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../reducers/userReducer';
+import { loginUser } from '../reducers/loginReducer';
+import { useHistory } from 'react-router-dom';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -8,10 +9,13 @@ const LoginForm = () => {
 
   const dispatch = useDispatch();
 
+  const history = useHistory();
+
   const handleLogin = (event) => {
     event.preventDefault();
     dispatch(loginUser(username, password));
     setPassword('');
+    history.push('/');
   };
 
   return (

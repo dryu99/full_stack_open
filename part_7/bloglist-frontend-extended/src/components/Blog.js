@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateBlog, removeBlog } from '../reducers/blogsReducer';
 import { changeNotification } from '../reducers/notificationReducer';
+import login from '../services/login';
 
-const Blog = ({ blog, user }) => {
-  const [viewDetails, setViewDetails] = useState(false);
-
+const Blog = ({ blog }) => {
   const dispatch = useDispatch();
+  const loginUser = useSelector(state => state.login);
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  };
-
-  const toggleDetails = () => {
-    setViewDetails(!viewDetails);
-  };
+  if (!blog) {
+    return null;
+  }
 
   const handleLikeClick = () => {
     try {
@@ -34,7 +26,7 @@ const Blog = ({ blog, user }) => {
   };
 
   const handleRemoveClick = async () => {
-    const ownedByLoggedInUser = blog.user.username === user.username;
+    const ownedByLoggedInUser = blog.user.username === loginUser.username;
 
     if(ownedByLoggedInUser && window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       try {
@@ -49,25 +41,22 @@ const Blog = ({ blog, user }) => {
   };
 
   return (
-    <div className='blog' style={blogStyle}>
-      <div className="default-view">
-        <span>{blog.title} {blog.author}</span>
-        <button className="toggle-button"onClick={toggleDetails}>{viewDetails ? 'hide' : 'view'}</button>
-      </div>
-      <div className="detailed-view" style={viewDetails ? null : { display: 'none' }}>
-        <span>{blog.url}</span>
-        <br/>
-        <span>likes <span className="likes">{blog.likes}</span></span>
-        <button onClick={handleLikeClick}>like</button>
-        <br/>
+    <div className='blog'>
+      <h2>{blog.title}</h2>
+      <span>{blog.url}</span>
+      <br/>
+      <span>likes <span className="likes">{blog.likes}</span></span>
+      <button onClick={handleLikeClick}>like</button>
+      <br/>
+      <span>added by {blog.user.name}</span>
+      <br/>
+      {loginUser && loginUser.username === blog.user.username ?
         <button onClick={handleRemoveClick}>remove</button>
-      </div>
+        :
+        null
+      }
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
 };
 
 export default Blog;

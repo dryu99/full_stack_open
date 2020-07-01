@@ -1,8 +1,8 @@
 import loginService from '../services/login';
 import blogService from '../services/blogs';
-import { changeNotification } from '../reducers/notificationReducer';
+import { changeNotification } from './notificationReducer';
 
-const userReducer = (state=null, action) => {
+const loginReducer = (state=null, action) => {
   switch (action.type) {
   case 'INIT_USER': {
     return action.data;
@@ -19,7 +19,7 @@ const userReducer = (state=null, action) => {
   }
 };
 
-export const initUser = () => {
+export const initLogin = () => {
   return (dispatch) => {
     // check if user data is available in cache
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser');
@@ -73,4 +73,4 @@ export const logoutUser = () => {
 };
 
 
-export default userReducer;
+export default loginReducer;
