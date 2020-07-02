@@ -70,6 +70,16 @@ export const removeBlog = (id) => {
   };
 };
 
+export const addComment = (id, comment) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.comment(id, comment);
+
+    dispatch({
+      type: 'UPDATE_BLOG',
+      data: { id, updatedBlog }
+    });
+  };
+};
 
 
 export default blogsReducer;

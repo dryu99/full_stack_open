@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateBlog, removeBlog } from '../reducers/blogsReducer';
+import { updateBlog, removeBlog, addComment } from '../reducers/blogsReducer';
 import { changeNotification } from '../reducers/notificationReducer';
 import login from '../services/login';
+import Togglable from './Togglable';
 
 const Blog = ({ blog }) => {
+  const [comment, setComment] = useState('');
+
   const dispatch = useDispatch();
   const loginUser = useSelector(state => state.login);
 
   if (!blog) {
     return null;
   }
+
+  // Componenet references:
+  const commentInputReference = React.createRef();
 
   const handleLikeClick = () => {
     try {
@@ -25,10 +31,14 @@ const Blog = ({ blog }) => {
     }
   };
 
-  const handleRemoveClick = async () => {
-    const ownedByLoggedInUser = blog.user.username === loginUser.username;
+  const handleCommentClick = () => {
+    dispatch(addComment(blog.id, comment));
+    setComment('');
+    commentInputReference.current.toggleVisibility();
+  };
 
-    if(ownedByLoggedInUser && window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+  const handleRemoveClick = async () => {
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       try {
         dispatch(removeBlog(blog.id));
         dispatch(changeNotification('Blog removed successfully!', 'success', 5));
@@ -50,11 +60,24 @@ const Blog = ({ blog }) => {
       <br/>
       <span>added by {blog.user.name}</span>
       <br/>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map((comment, i) =>
+          <li key={i + comment}>{comment}</li>
+        )}
+      </ul>
       {loginUser && loginUser.username === blog.user.username ?
         <button onClick={handleRemoveClick}>remove</button>
         :
         null
       }
+      <Togglable buttonLabel={'add comment'} ref={commentInputReference}>
+        <input
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}>
+        </input>
+        <button onClick={handleCommentClick} >comment</button>
+      </Togglable>
     </div>
   );
 };

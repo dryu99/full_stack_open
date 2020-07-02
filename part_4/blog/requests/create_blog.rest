@@ -1,10 +1,17 @@
-POST http://localhost:3003/api/blogs
+# POST http://localhost:3003/api/blogs
+# Content-Type: application/json
+# Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vYWhraW05OSIsImlkIjoiNWViNjY0MjQyM2RjN2M2ODZmZWRkYzE5IiwiaWF0IjoxNTg5MDE5OTQ2fQ.5gBvfY17W3t1UPxjXgSqIQdiiOnw0rFqlJVCsFzyfFQ
+
+# {
+#   "title": "BLOG BLOG again again",
+#   "author": "BLOG WANG",
+#   "url": "BLOG.COM",
+#   "likes": 3
+# }
+
+POST http://localhost:3003/api/blogs/5eb6870de1896b780a734222/comments
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vYWhraW05OSIsImlkIjoiNWViNjY0MjQyM2RjN2M2ODZmZWRkYzE5IiwiaWF0IjoxNTg5MDE5OTQ2fQ.5gBvfY17W3t1UPxjXgSqIQdiiOnw0rFqlJVCsFzyfFQ
 
 {
-  "title": "BLOG BLOG again again",
-  "author": "BLOG WANG",
-  "url": "BLOG.COM",
-  "likes": 3
+  "comment": "this is a comment"
 }

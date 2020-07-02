@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 
-const Togglable = (props) => {
+const Togglable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
   const hiddenStyle = { display: 'none' };
 
   const toggleVisibility = () => {
     setVisible(!visible);
   };
+
+  useImperativeHandle(ref, () => {
+    return {
+      toggleVisibility
+    };
+  });
 
   return (
     <React.Fragment>
@@ -19,6 +25,8 @@ const Togglable = (props) => {
       </div>
     </React.Fragment>
   );
-};
+});
+
+Togglable.displayName = 'Togglable';
 
 export default Togglable;

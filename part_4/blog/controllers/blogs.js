@@ -18,7 +18,6 @@ blogRouter.post('/', async (request, response) => {
 
   const body = request.body;
   const user = await User.findById(decodedToken.id);
-  console.log(user);
 
   const blog = new Blog({
     title: body.title,
@@ -80,6 +79,23 @@ blogRouter.put('/:id', async (request, response) => {
   };
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
+  if (updatedBlog) {
+    response.json(updatedBlog.toJSON());
+  } else {
+    response.status(404).end();
+  }
+});
+
+blogRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body;
+  const blog = await Blog.findById(request.params.id);
+
+  // add new comment to existing comments list
+  blog.comments = [...blog.comments, body.comment];
+
+  // save updated blog
+  const updatedBlog = await blog.save();
+
   if (updatedBlog) {
     response.json(updatedBlog.toJSON());
   } else {
