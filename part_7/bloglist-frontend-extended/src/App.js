@@ -1,34 +1,29 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Link,
   Switch,
   Route,
-  useParams,
   useRouteMatch,
-  useHistory
 } from 'react-router-dom';
 
 import NavMenu from './components/NavMenu';
 import Blog from './components/Blog';
 import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
-import CreateBlogForm from './components/CreateBlogForm';
 import Notification from './components/Notification';
 import Users from './components/Users';
 import User from './components/User';
-import Togglable from './components/Togglable';
 import { initBlogs } from './reducers/blogsReducer';
 import { initLogin } from './reducers/loginReducer';
 import { initUsers } from './reducers/usersReducer';
 
-
+import { Page } from './style';
 
 const App = () => {
   const dispatch = useDispatch();
-
   const blogs = useSelector(state => state.blogs);
   const users = useSelector(state => state.users);
+  const loginUser = useSelector(state => state.login);
 
   useEffect(() => {
     dispatch(initLogin());
@@ -53,16 +48,16 @@ const App = () => {
     : null;
 
   return (
-    <React.Fragment>
+    <Page>
       <Notification notification={''}/>
       <NavMenu />
-      <h2>blogs</h2>
+      <h2>Blog App</h2>
       <Switch>
         <Route path="/users/:id">
           <User user={currentUser}/>
         </Route>
         <Route path="/users">
-          <Users />
+          {loginUser ? <Users /> : <h3>login please!</h3>}
         </Route>
         <Route path="/blogs/:id">
           <Blog blog={currentBlog}/>
@@ -71,10 +66,10 @@ const App = () => {
           <LoginForm />
         </Route>
         <Route path="/">
-          <Blogs />
+          {loginUser ? <Blogs /> : <h3>login please!</h3>}
         </Route>
       </Switch>
-    </React.Fragment>
+    </Page>
   );
 };
 

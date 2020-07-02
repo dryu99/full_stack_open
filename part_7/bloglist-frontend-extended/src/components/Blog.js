@@ -6,6 +6,8 @@ import { changeNotification } from '../reducers/notificationReducer';
 import login from '../services/login';
 import Togglable from './Togglable';
 
+import { Button, Input } from '../style';
+
 const Blog = ({ blog }) => {
   const [comment, setComment] = useState('');
 
@@ -52,11 +54,11 @@ const Blog = ({ blog }) => {
 
   return (
     <div className='blog'>
-      <h2>{blog.title}</h2>
+      <h3>{blog.title}</h3>
       <span>{blog.url}</span>
       <br/>
       <span>likes <span className="likes">{blog.likes}</span></span>
-      <button onClick={handleLikeClick}>like</button>
+      <Button onClick={handleLikeClick}>like</Button>
       <br/>
       <span>added by {blog.user.name}</span>
       <br/>
@@ -67,16 +69,16 @@ const Blog = ({ blog }) => {
         )}
       </ul>
       {loginUser && loginUser.username === blog.user.username ?
-        <button onClick={handleRemoveClick}>remove</button>
+        <Button onClick={handleRemoveClick}>remove</Button>
         :
         null
       }
       <Togglable buttonLabel={'add comment'} ref={commentInputReference}>
-        <input
+        <Input
           value={comment}
           onChange={({ target }) => setComment(target.value)}>
-        </input>
-        <button onClick={handleCommentClick} >comment</button>
+        </Input>
+        <Button onClick={handleCommentClick} >comment</Button>
       </Togglable>
     </div>
   );
