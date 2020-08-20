@@ -1,7 +1,7 @@
-interface ExerciseValues {
-  dailyExerciseHrs: Array<number>,
-  target: number
-}
+// interface ExerciseValues {
+//   dailyExerciseHrs: Array<number>,
+//   target: number
+// }
 
 interface Result { 
   periodLength: number,
@@ -27,7 +27,7 @@ const calculateExercises = (dailyExerciseHrs: Array<number>, target: number): Re
   const totalDailyHrs: number = dailyExerciseHrs.reduce(
     (acc, curr) => acc + curr,
     0
-  )
+  );
 
   const average: number = totalDailyHrs / dailyExerciseHrs.length;
 
@@ -59,33 +59,35 @@ const calculateExercises = (dailyExerciseHrs: Array<number>, target: number): Re
     ratingDescription: rating.description,
     target,
     average
-  }
-}
+  };
+};
 
 // first user arg = target value
 // rest user args = dailyExerciseHrs array values
-const processCalculatorArgs = (args: Array<string>): ExerciseValues => {
-  if (args.length < 4) throw new Error('invalid number of args given');
+// const processCalculatorArgs = (args: Array<string>): ExerciseValues => {
+//   if (args.length < 4) throw new Error('invalid number of args given');
 
-  const [arg0, arg1, arg2, ...argRest] = args;
-  
-  const target: number = Number(arg2);
-  const dailyExerciseHrs: Array<number> = argRest.map(n => Number(n));
+//   const [arg0, arg1, arg2, ...argRest] = args;
 
-  if (!isNaN(target) && dailyExerciseHrs.every((n) => !isNaN(n))) {
-    return {
-      target,
-      dailyExerciseHrs
-    }
-  }
+//   const target = Number(arg2);
+//   const dailyExerciseHrs: Array<number> = argRest.map(n => Number(n));
 
-  throw new Error('invalid arg types given; need numbers!')
-}
+//   if (!isNaN(target) && dailyExerciseHrs.every((n) => !isNaN(n))) {
+//     return {
+//       target,
+//       dailyExerciseHrs
+//     };
+//   }    
 
-try {
-  const { target, dailyExerciseHrs } = processCalculatorArgs(process.argv);
-  console.log(calculateExercises(dailyExerciseHrs, target));
-} catch (error) {
-  console.error(error);
-}
+//   throw new Error('invalid arg types given; need numbers!');
+// };
+
+// try {
+//   const { target, dailyExerciseHrs } = processCalculatorArgs(process.argv);
+//   console.log(calculateExercises(dailyExerciseHrs, target));
+// } catch (error) {
+//   console.error(error);
+// }
+
+export { calculateExercises };
   

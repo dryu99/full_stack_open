@@ -22,29 +22,31 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 
   return message;
-}
+};
 
 const processBmiArgs = (args: Array<string>): BodyMeasurements => {
   if (args.length !== 4) throw new Error('invalid number of args given');
 
-  const height: number = Number(args[2]);
-  const weight: number = Number(args[3]);
+  const height = Number(args[2]);
+  const weight = Number(args[3]);
 
   if (!isNaN(height) && !isNaN(weight)) {
     return {
       height,
       weight
-    }
+    };
   }
 
-  throw new Error('invalid arg types given; need numbers!')
-}
+  throw new Error('invalid arg types given; need numbers!');
+};
 
-try {
-  const { height, weight } = processBmiArgs(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error) {
-  console.error(error);
-}
+// try {
+//   const { height, weight } = processBmiArgs(process.argv);
+//   console.log(calculateBmi(height, weight));
+// } catch (error) {
+//   console.error(error);
+// }
+
+export { calculateBmi, processBmiArgs };
 
 
