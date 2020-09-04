@@ -51,11 +51,11 @@ const PatientListPage: React.FC = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {Object.values(patients).map((patient: Patient) => (
-            <Table.Row key={patient.id}>
-              <Table.Cell>{patient.name}</Table.Cell>
-              <Table.Cell>{patient.gender}</Table.Cell>
-              <Table.Cell>{patient.occupation}</Table.Cell>
+          {Object.values(patients).map((patient) => (
+            <Table.Row key={patient?.id}>
+              <Table.Cell>{patient?.name}</Table.Cell>
+              <Table.Cell>{patient?.gender}</Table.Cell>
+              <Table.Cell>{patient?.occupation}</Table.Cell>
               <Table.Cell>
                 <HealthRatingBar showText={false} rating={1} />
               </Table.Cell>
